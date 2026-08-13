@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TheCatAndI — Roblox Scripter (Luau)</title>
+<meta name="description" content="Roblox scripter with 5+ years of experience. Games worked on have over 550M combined visits.">
+<style>
+  :root{
+    --bg:#0e1117;
+    --bg-soft:#161b25;
+    --line:#242c3a;
+    --text:#e7ecf3;
+    --muted:#94a3b8;
+    --accent:#5b9cff;
+    --accent-soft:rgba(91,156,255,.12);
+    --gold:#f5c451;
+    --gold-soft:rgba(245,196,81,.12);
+    --gold-line:rgba(245,196,81,.42);
+    --live:#4ade80;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:0 20px;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:40px 0 72px}
+
+  /* ---------- language switch ---------- */
+  .langbar{display:flex;justify-content:flex-end;gap:6px;margin-bottom:24px}
+  .langbar button{
+    background:var(--bg-soft);border:1px solid var(--line);color:var(--muted);
+    font:600 13px/1 inherit;letter-spacing:.05em;
+    padding:9px 13px;border-radius:8px;cursor:pointer;
+  }
+  .langbar button:hover{color:var(--text)}
+  .langbar button[aria-pressed="true"]{
+    color:var(--accent);border-color:var(--accent);background:var(--accent-soft);
+  }
+
+  /* ---------- header ---------- */
+  header{border-bottom:1px solid var(--line);padding-bottom:32px;margin-bottom:40px}
+  .role{
+    display:inline-block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent);background:var(--accent-soft);
+    padding:5px 11px;border-radius:999px;margin-bottom:16px;
+  }
+  h1{font-size:clamp(30px,6vw,44px);line-height:1.15;margin:0 0 14px;letter-spacing:-.02em}
+  .lead{font-size:clamp(16px,2.4vw,19px);color:var(--muted);margin:0 0 26px;max-width:60ch}
+  .lead strong{color:var(--text);font-weight:600}
+
+  .contact{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--bg-soft);border:1px solid var(--line);
+    padding:9px 14px;border-radius:999px;font-size:15px;
+  }
+  .chip b{font-weight:600}
+  .chip span{color:var(--muted)}
+  a.chip{color:var(--text);text-decoration:none}
+  a.chip:hover{border-color:var(--accent)}
+  a.chip:hover b{color:var(--accent)}
+
+  /* ---------- sections ---------- */
+  section{margin-bottom:48px}
+  h2{
+    font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    margin:0 0 20px;font-weight:600;
+  }
+
+  /* ---------- games ---------- */
+  .games{display:grid;gap:22px}
+  .game{
+    background:var(--bg-soft);border:1px solid var(--line);
+    border-radius:var(--radius);overflow:hidden;
+  }
+  .game img{display:block;width:100%;height:auto;border-bottom:1px solid var(--line)}
+  .game-body{padding:20px 22px 22px}
+
+  .game-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:8px}
+  .game h3{margin:0;font-size:21px;letter-spacing:-.01em}
+  .game h3 a{color:var(--text);text-decoration:none}
+  .game h3 a:hover{color:var(--accent)}
+
+  .badge{
+    display:inline-block;font-size:13px;font-weight:600;color:var(--accent);
+    background:var(--accent-soft);padding:4px 10px;border-radius:6px;margin-bottom:12px;
+  }
+  .game p{margin:0 0 14px;color:var(--muted)}
+  .stats{display:flex;flex-wrap:wrap;gap:22px;margin:0 0 16px;padding:0;list-style:none}
+  .stats li{line-height:1.3}
+  .stats b{display:block;font-size:20px;font-weight:700;letter-spacing:-.01em}
+  .stats i{display:block;font-size:13px;color:var(--muted);font-style:normal}
+  .link{color:var(--accent);text-decoration:none;font-size:15px;word-break:break-word}
+  .link:hover{text-decoration:underline}
+
+  /* live online counter */
+  .stats li.online b{color:var(--live)}
+  .stats li.online b::before{
+    content:"";display:inline-block;width:7px;height:7px;margin-right:7px;
+    border-radius:50%;background:var(--live);vertical-align:middle;
+  }
+
+  /* ---------- top projects ---------- */
+  .game.top{border-color:var(--gold-line);box-shadow:0 0 0 1px rgba(245,196,81,.10)}
+  .game.top img{border-bottom-color:var(--gold-line)}
+  .game.top .stats b{color:var(--gold)}
+  .game.top .stats li.online b{color:var(--live)}
+  .game.top .badge{color:var(--gold);background:var(--gold-soft)}
+
+  /* ---------- lists ---------- */
+  .cols{display:grid;gap:34px}
+  @media(min-width:680px){.cols{grid-template-columns:1fr 1fr}}
+  ul.plain{margin:0;padding:0;list-style:none}
+  ul.plain li{padding:9px 0;border-bottom:1px solid var(--line);color:var(--muted)}
+  ul.plain li:last-child{border-bottom:0}
+  .tags{display:flex;flex-wrap:wrap;gap:9px}
+  .tag{
+    background:var(--bg-soft);border:1px solid var(--line);
+    padding:7px 13px;border-radius:8px;font-size:14px;color:var(--muted);
+  }
+
+  footer{
+    border-top:1px solid var(--line);padding-top:28px;color:var(--muted);font-size:15px;
+  }
+  footer b{color:var(--text)}
+
+  [hidden]{display:none !important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="langbar">
+    <button id="btn-en" type="button" aria-pressed="true">EN</button>
+    <button id="btn-ru" type="button" aria-pressed="false">RU</button>
+  </div>
+
+  <header>
+    <div class="role" data-l="en">Roblox Scripter · Luau</div>
+    <div class="role" data-l="ru" hidden>Roblox-скриптер · Luau</div>
+
+    <h1>TheCatAndI</h1>
+
+    <p class="lead" data-l="en">I have been scripting in Roblox for over <strong>5 years</strong>. The games I worked on have more than <strong>550M combined visits</strong>. I take on projects of any size, from a single system to a full game built from scratch.</p>
+    <p class="lead" data-l="ru" hidden>Пишу скрипты в Roblox больше <strong>5 лет</strong>. Игры, над которыми я работал, набрали суммарно более <strong>550 млн визитов</strong>. Берусь за проекты любого размера — от отдельной системы до игры с нуля.</p>
+
+    <div class="contact">
+      <span class="chip"><span>Discord:</span> <b>TheCatAndI</b></span>
+      <a class="chip" href="https://www.roblox.com/users/3758487720/profile" target="_blank" rel="noopener"><span>Roblox:</span> <b>ThePetAndI</b></a>
+      <span class="chip" data-l="en"><span>Available for commissions</span></span>
+      <span class="chip" data-l="ru" hidden><span>Открыт для заказов</span></span>
+    </div>
+  </header>
+
+  <section>
+    <h2 data-l="en">Games I've worked on</h2>
+    <h2 data-l="ru" hidden>Игры, над которыми я работал</h2>
+
+    <div class="games">
+
+      <!-- 1. Mr. Mix — 381M visits -->
+      <article class="game top" data-universe="6417564879">
+        <img src="mr-mix.png" alt="Mr. Mix — Roblox game" loading="lazy" onerror="this.remove()">
+        <div class="game-body">
+          <div class="game-head">
+            <h3><a href="https://www.roblox.com/games/18948446518/Mr-Mix" target="_blank" rel="noopener">Mr. Mix</a></h3>
+          </div>
+
+          <div class="badge" data-l="en">Sole programmer</div>
+          <div class="badge" data-l="ru" hidden>Единственный программист</div>
+
+          <p data-l="en">Horror game. I was the only programmer on the project and wrote the entire codebase in Luau — gameplay systems, interface and data handling — and kept fixing bugs and optimizing performance across updates.</p>
+          <p data-l="ru" hidden>Хоррор-игра. Я был единственным программистом проекта и написал весь код на Luau — игровые системы, интерфейс и работу с данными, — а также исправлял баги и оптимизировал производительность в каждом обновлении.</p>
+
+          <ul class="stats">
+            <li><b>380M+</b><i data-l="en">visits</i><i data-l="ru" hidden>визитов</i></li>
+            <li><b>359K</b><i data-l="en">favorites</i><i data-l="ru" hidden>в избранном</i></li>
+            <li class="online" hidden><b></b><i data-l="en">online now</i><i data-l="ru" hidden>сейчас играют</i></li>
+          </ul>
+
+          <a class="link" href="https://www.roblox.com/games/18948446518/Mr-Mix" target="_blank" rel="noopener">roblox.com/games/18948446518/Mr-Mix</a>
+        </div>
+      </article>
+
+      <!-- 2. Ride A Cart Down A Slide — 153M visits -->
+      <article class="game top" data-universe="6720585148">
+        <img src="ride-a-cart.png" alt="Ride A Cart Down A Slide — Roblox game" loading="lazy" onerror="this.remove()">
+        <div class="game-body">
+          <div class="game-head">
+            <h3><a href="https://www.roblox.com/games/124398083342642/Ride-A-Cart-Down-A-Slide" target="_blank" rel="noopener">Ride A Cart Down A Slide</a></h3>
+          </div>
+
+          <div class="badge" data-l="en">Sole scripter after acquisition</div>
+          <div class="badge" data-l="ru" hidden>Единственный скриптер после выкупа</div>
+
+          <p data-l="en">After the game was acquired by new owners, I stayed on as the only scripter and handled the codebase on my own for a long period — new features, updates and fixes on a live game with a large active audience.</p>
+          <p data-l="ru" hidden>После того как игру выкупили новые владельцы, я остался единственным скриптером и долгое время вёл весь код в одиночку — новые механики, обновления и правки на живой игре с большой активной аудиторией.</p>
+
+          <ul class="stats">
+            <li><b>150M+</b><i data-l="en">visits</i><i data-l="ru" hidden>визитов</i></li>
+            <li><b>2.5M+</b><i data-l="en">favorites</i><i data-l="ru" hidden>в избранном</i></li>
+            <li class="online" hidden><b></b><i data-l="en">online now</i><i data-l="ru" hidden>сейчас играют</i></li>
+          </ul>
+
+          <a class="link" href="https://www.roblox.com/games/124398083342642/Ride-A-Cart-Down-A-Slide" target="_blank" rel="noopener">roblox.com/games/124398083342642/Ride-A-Cart-Down-A-Slide</a>
+        </div>
+      </article>
+
+      <!-- 3. Teamwork Puzzles X Obby — 12.4M visits -->
+      <article class="game" data-universe="5813707775">
+        <img src="teamwork-puzzles.png" alt="Teamwork Puzzles X Obby — Roblox game" loading="lazy" onerror="this.remove()">
+        <div class="game-body">
+          <div class="game-head">
+            <h3><a href="https://www.roblox.com/games/16931548915/Teamwork-Puzzles-X-Obby" target="_blank" rel="noopener">Teamwork Puzzles X Obby</a></h3>
+          </div>
+
+          <div class="badge" data-l="en">Scripting · Building · UI/UX</div>
+          <div class="badge" data-l="ru" hidden>Код · Строительство · UI/UX</div>
+
+          <p data-l="en">Co-op puzzle obby. I was solely responsible for all scripting and core systems development, and I also handled building and the full UI/UX design and implementation — everything except icons and game thumbnails.</p>
+          <p data-l="ru" hidden>Кооперативная обби с головоломками. Я полностью отвечал за весь код и разработку основных игровых систем, а также занимался строительством и полным циклом UI/UX — дизайном и реализацией, кроме иконок и превью игры.</p>
+
+          <ul class="stats">
+            <li><b>12M+</b><i data-l="en">visits</i><i data-l="ru" hidden>визитов</i></li>
+            <li><b>187K</b><i data-l="en">favorites</i><i data-l="ru" hidden>в избранном</i></li>
+            <li class="online" hidden><b></b><i data-l="en">online now</i><i data-l="ru" hidden>сейчас играют</i></li>
+          </ul>
+
+          <a class="link" href="https://www.roblox.com/games/16931548915/Teamwork-Puzzles-X-Obby" target="_blank" rel="noopener">roblox.com/games/16931548915/Teamwork-Puzzles-X-Obby</a>
+        </div>
+      </article>
+
+      <!-- 4. Classic Games — 3.88M visits -->
+      <article class="game" data-universe="9729754494">
+        <img src="classic-games.png" alt="Classic Games — Roblox game" loading="lazy" onerror="this.remove()">
+        <div class="game-body">
+          <div class="game-head">
+            <h3><a href="https://www.roblox.com/games/129001652516147/Classic-Games" target="_blank" rel="noopener">Classic Games</a></h3>
+          </div>
+
+          <div class="badge" data-l="en">Sole scripter</div>
+          <div class="badge" data-l="ru" hidden>Единственный скриптер</div>
+
+          <p data-l="en">A collection of classic mini-games with a chest reward system. I was solely responsible for all scripting and core systems development.</p>
+          <p data-l="ru" hidden>Сборник классических мини-игр с системой наград в сундуках. Я полностью отвечал за весь код и разработку основных игровых систем.</p>
+
+          <ul class="stats">
+            <li><b>3.8M+</b><i data-l="en">visits</i><i data-l="ru" hidden>визитов</i></li>
+            <li><b>34K</b><i data-l="en">favorites</i><i data-l="ru" hidden>в избранном</i></li>
+            <li class="online" hidden><b></b><i data-l="en">online now</i><i data-l="ru" hidden>сейчас играют</i></li>
+          </ul>
+
+          <a class="link" href="https://www.roblox.com/games/129001652516147/Classic-Games" target="_blank" rel="noopener">roblox.com/games/129001652516147/Classic-Games</a>
+        </div>
+      </article>
+
+      <!-- 5. Meme Kombat — 516K visits -->
+      <article class="game" data-universe="7123285903">
+        <img src="meme-kombat.png" alt="Meme Kombat — Roblox game" loading="lazy" onerror="this.remove()">
+        <div class="game-body">
+          <div class="game-head">
+            <h3><a href="https://www.roblox.com/games/119754606120804/Meme-Kombat" target="_blank" rel="noopener">Meme Kombat</a></h3>
+          </div>
+
+          <div class="badge" data-l="en">Sole scripter until acquisition</div>
+          <div class="badge" data-l="ru" hidden>Единственный скриптер до выкупа</div>
+
+          <p data-l="en">Meme-themed fighting game. I was the only scripter on the project through development and release, and stayed the only one on the code up until the game was acquired.</p>
+          <p data-l="ru" hidden>Файтинг по мемам. Я был единственным скриптером проекта на всём пути разработки и до релиза, и оставался единственным на коде вплоть до выкупа игры.</p>
+
+          <ul class="stats">
+            <li><b>516K+</b><i data-l="en">visits</i><i data-l="ru" hidden>визитов</i></li>
+            <li class="online" hidden><b></b><i data-l="en">online now</i><i data-l="ru" hidden>сейчас играют</i></li>
+          </ul>
+
+          <a class="link" href="https://www.roblox.com/games/119754606120804/Meme-Kombat" target="_blank" rel="noopener">roblox.com/games/119754606120804/Meme-Kombat</a>
+        </div>
+      </article>
+
+      <!-- 6. Mrouse's Animations — 475K visits -->
+      <article class="game" data-universe="10175155684">
+        <img src="mrouses-animations.png" alt="Mrouse's Animations — Roblox game" loading="lazy" onerror="this.remove()">
+        <div class="game-body">
+          <div class="game-head">
+            <h3><a href="https://www.roblox.com/games/121297490325652/Mrouses-Animations" target="_blank" rel="noopener">Mrouse's Animations</a></h3>
+          </div>
+
+          <div class="badge" data-l="en">Sole scripter</div>
+          <div class="badge" data-l="ru" hidden>Единственный скриптер</div>
+
+          <p data-l="en">Animation showcase experience. I was solely responsible for all scripting and core systems development.</p>
+          <p data-l="ru" hidden>Игра-витрина анимаций. Я полностью отвечал за весь код и разработку основных игровых систем.</p>
+
+          <ul class="stats">
+            <li><b>470K+</b><i data-l="en">visits</i><i data-l="ru" hidden>визитов</i></li>
+            <li><b>9.6K</b><i data-l="en">favorites</i><i data-l="ru" hidden>в избранном</i></li>
+            <li class="online" hidden><b></b><i data-l="en">online now</i><i data-l="ru" hidden>сейчас играют</i></li>
+          </ul>
+
+          <a class="link" href="https://www.roblox.com/games/121297490325652/Mrouses-Animations" target="_blank" rel="noopener">roblox.com/games/121297490325652/Mrouses-Animations</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       БЛОК ВИДЕО-ДЕМОНСТРАЦИЙ (сейчас скрыт)
+       Когда запишешь видео своих систем и зальёшь на YouTube (доступ
+       "по ссылке" подойдёт), включи блок: удали строку-открывашку
+       комментария сразу под этой рамкой и строку-закрывашку в самом
+       низу блока, затем подставь названия, описания и ссылки.
+       Этот блок нужен для второго сервера, где скриптерам нужно видео.
+  ====================================================================== -->
+  <!--
+  <section>
+    <h2 data-l="en">System demos</h2>
+    <h2 data-l="ru" hidden>Демонстрации систем</h2>
+    <div class="games">
+      <article class="game">
+        <div class="game-body">
+          <div class="game-head"><h3>НАЗВАНИЕ СИСТЕМЫ</h3></div>
+          <p data-l="en">Short description of what the system does.</p>
+          <p data-l="ru" hidden>Короткое описание того, что делает система.</p>
+          <a class="link" href="ССЫЛКА НА YOUTUBE" target="_blank" rel="noopener">YouTube →</a>
+        </div>
+      </article>
+    </div>
+  </section>
+  -->
+
+  <section>
+    <div class="cols">
+      <div>
+        <h2 data-l="en">What I do</h2>
+        <h2 data-l="ru" hidden>Что я делаю</h2>
+        <ul class="plain">
+          <li data-l="en">Full game development from scratch</li>
+          <li data-l="ru" hidden>Разработка игр с нуля</li>
+          <li data-l="en">Game optimization &amp; performance improvements</li>
+          <li data-l="ru" hidden>Оптимизация и повышение производительности</li>
+          <li data-l="en">Clean and scalable OOP code</li>
+          <li data-l="ru" hidden>Чистый и масштабируемый ООП-код</li>
+          <li data-l="en">Roblox core systems &amp; popular frameworks</li>
+          <li data-l="ru" hidden>Системы Roblox и популярные фреймворки</li>
+          <li data-l="en">Reviewing and fixing existing codebases</li>
+          <li data-l="ru" hidden>Разбор и исправление чужого кода</li>
+        </ul>
+      </div>
+      <div>
+        <h2 data-l="en">Frameworks &amp; tools</h2>
+        <h2 data-l="ru" hidden>Фреймворки и инструменты</h2>
+        <ul class="plain">
+          <li>ProfileStore</li>
+          <li>Knit</li>
+          <li>TopbarPlus</li>
+          <li data-l="en">Other popular modules</li>
+          <li data-l="ru" hidden>Другие популярные модули</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-l="en">Genres I've worked with</h2>
+    <h2 data-l="ru" hidden>Жанры, с которыми работал</h2>
+    <div class="tags">
+      <span class="tag" data-l="en">Simulators</span>
+      <span class="tag" data-l="ru" hidden>Симуляторы</span>
+      <span class="tag" data-l="en">Building / Construction</span>
+      <span class="tag" data-l="ru" hidden>Строительство</span>
+      <span class="tag" data-l="en">Morph systems</span>
+      <span class="tag" data-l="ru" hidden>Системы морфов</span>
+      <span class="tag" data-l="en">Obby (incl. teamwork mechanics)</span>
+      <span class="tag" data-l="ru" hidden>Обби (в т.ч. кооперативные механики)</span>
+      <span class="tag" data-l="en">Horror</span>
+      <span class="tag" data-l="ru" hidden>Хоррор</span>
+      <span class="tag" data-l="en">Fighting</span>
+      <span class="tag" data-l="ru" hidden>Файтинг</span>
+    </div>
+  </section>
+
+  <footer>
+    <span data-l="en">Want to hire me? Message me on Discord — <b>TheCatAndI</b></span>
+    <span data-l="ru" hidden>Хотите нанять? Напишите в Discord — <b>TheCatAndI</b></span>
+  </footer>
+
+</div>
+
+<script>
+/* ---------- язык ---------- */
+(function () {
+  var root = document.documentElement;
+  var btnEn = document.getElementById('btn-en');
+  var btnRu = document.getElementById('btn-ru');
+
+  window.applyLang = function (lang) {
+    var isRu = lang === 'ru';
+    var en = document.querySelectorAll('[data-l="en"]');
+    var ru = document.querySelectorAll('[data-l="ru"]');
+    for (var i = 0; i < en.length; i++) { en[i].hidden = isRu; }
+    for (var j = 0; j < ru.length; j++) { ru[j].hidden = !isRu; }
+    root.lang = isRu ? 'ru' : 'en';
+    root.setAttribute('data-lang', isRu ? 'ru' : 'en');
+    btnEn.setAttribute('aria-pressed', String(!isRu));
+    btnRu.setAttribute('aria-pressed', String(isRu));
+  };
+
+  // Русский только если язык устройства русский. Во всех остальных случаях — английский.
+  function detect() {
+    var list = navigator.languages || [navigator.language || 'en'];
+    for (var i = 0; i < list.length; i++) {
+      var code = String(list[i]).toLowerCase();
+      if (code.indexOf('ru') === 0) { return 'ru'; }
+      if (code.indexOf('en') === 0) { return 'en'; }
+    }
+    return 'en';
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem('portfolio-lang'); } catch (e) {}
+  window.applyLang(saved === 'ru' || saved === 'en' ? saved : detect());
+
+  function pick(lang) {
+    return function () {
+      window.applyLang(lang);
+      try { localStorage.setItem('portfolio-lang', lang); } catch (e) {}
+    };
+  }
+  btnEn.addEventListener('click', pick('en'));
+  btnRu.addEventListener('click', pick('ru'));
+})();
+
+/* ---------- живой онлайн из Roblox API ----------
+   Строка "online now" появляется только если онлайн больше нуля.
+   Если API недоступен или блокирует запрос — строка просто не показывается. */
+(function () {
+  if (!window.fetch) { return; }
+
+  var cards = document.querySelectorAll('.game[data-universe]');
+  if (!cards.length) { return; }
+
+  var ids = [];
+  for (var i = 0; i < cards.length; i++) {
+    ids.push(cards[i].getAttribute('data-universe'));
+  }
+
+  fetch('https://games.roblox.com/v1/games?universeIds=' + ids.join(','))
+    .then(function (res) { return res.ok ? res.json() : null; })
+    .then(function (payload) {
+      if (!payload || !payload.data) { return; }
+
+      var shown = false;
+      for (var i = 0; i < payload.data.length; i++) {
+        var game = payload.data[i];
+        if (!game.playing) { continue; }
+
+        var card = document.querySelector('.game[data-universe="' + game.id + '"]');
+        if (!card) { continue; }
+
+        var row = card.querySelector('.online');
+        if (!row) { continue; }
+
+        row.querySelector('b').textContent = Number(game.playing).toLocaleString();
+        row.hidden = false;
+        shown = true;
+      }
+
+      // Перерисовываем подписи под текущий язык
+      if (shown) { window.applyLang(document.documentElement.lang === 'ru' ? 'ru' : 'en'); }
+    })
+    .catch(function () {});
+})();
+</script>
+</body>
+</html>
